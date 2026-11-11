@@ -16,6 +16,13 @@ let cmarkPackageName = ProcessInfo.processInfo.environment["SWIFTCI_USE_LOCAL_DE
 
 let package = Package(
     name: "swift-markdown",
+    // Keep these floors in every manifest. With older deployment targets the
+    // compiler emits ManagedBuffer subclass metadata that fails pointer
+    // authentication on arm64e once Xcode partially links this package into an
+    // app with Enhanced Security: the app crashes on its first parse. macOS 13 /
+    // iOS 16 targets avoid that metadata. Run an arm64e app build before
+    // lowering them in a dependency update.
+    platforms: [.macOS(.v13), .iOS(.v16)],
     products: [
         .library(
             name: "Markdown",
