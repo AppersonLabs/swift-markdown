@@ -16,6 +16,9 @@ let cmarkPackageName = ProcessInfo.processInfo.environment["SWIFTCI_USE_LOCAL_DE
 
 let package = Package(
     name: "swift-markdown",
+    // Older deployment targets emit ManagedBuffer subclass metadata that fails
+    // pointer authentication after Xcode's partial link of Swift packages.
+    platforms: [.macOS(.v13), .iOS(.v16)],
     products: [
         .library(
             name: "Markdown",
